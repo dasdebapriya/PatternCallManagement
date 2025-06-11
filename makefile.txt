@@ -1,0 +1,18 @@
+CXX = g++
+CXXFLAGS = -std=c++17 -Wall -Wextra -I.
+
+SRC = pattern_call.cpp pattern_call_manager.cpp
+TEST_SRC = pattern_call_tests.cpp
+MAIN_SRC = main.cpp
+
+# Targets
+all: test_runner demo_app
+
+test_runner: $(SRC) $(TEST_SRC)
+	$(CXX) $(CXXFLAGS) -o test_runner $(SRC) $(TEST_SRC)
+
+demo_app: $(SRC) $(MAIN_SRC)
+	$(CXX) $(CXXFLAGS) -o demo_app $(SRC) $(MAIN_SRC)
+
+clean:
+	rm -f test_runner demo_app
