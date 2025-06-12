@@ -5,45 +5,45 @@
 int main() {
     PatternCallManager manager;
 
-    // Step 1: Load from file
-    manager.loadFromFile("input_patterns.txt");
+    // Load from file
+    manager.loadFromFile("input/input_patterns.txt");
 
-    // Step 2: Add a few dummy entries
-    manager.addPatternCall({101, "InitSeq", "src/patterns/Init.pat", true});
-    manager.addPatternCall({102, "Shutdown", "src/patterns/Power.pat", false});
-    manager.addPatternCall({103, "InitSeq", "src/patterns/Init.pat", true});
+    // Add a few dummy entries
+    manager.addPatternCall(PatternCall(105, "InitSeq", "src/patterns/Init3.pat", true));
+    manager.addPatternCall(PatternCall(202, "WakeupSeq", "src/patterns/Power_1.pat", false));
+    manager.addPatternCall(PatternCall(305, "SleepSeq", "src/patterns/Shutdown_2.pat", true));
 
-    // Step 3: Query by ID
+    // Query by ID
     if (const PatternCall* pc = manager.getById(101)) {
         std::cout << "Found by ID 101: " << *pc << "\n";
     }
 
-    // Step 4: Query by name
+    // Query by name
     std::cout << "\nAll entries with name 'InitSeq':\n";
     for (const auto& pc : manager.getByName("InitSeq")) {
         std::cout << pc << "\n";
     }
 
-    // Step 5: Query by path
-    std::cout << "\nAll entries with path 'src/patterns/Init.pat':\n";
-    for (const auto& pc : manager.getByPath("src/patterns/Init.pat")) {
+    // Query by path
+    std::cout << "\nAll entries with path 'src/patterns/Init_1.pat':\n";
+    for (const auto& pc : manager.getByPath("src/patterns/Init_1.pat")) {
         std::cout << pc << "\n";
     }
 
-    // Step 6: Get skipped
+    // Get skipped
     std::cout << "\nAll skipped entries (called == false):\n";
     for (const auto& pc : manager.getSkipped()) {
         std::cout << pc << "\n";
     }
 
-    // Step 7: Get called
+    // Get called
     std::cout << "\nAll called entries (called == true):\n";
     for (const auto& pc : manager.getCalled()) {
         std::cout << pc << "\n";
     }
 
-    // Step 8: Write all entries to output file
-    manager.writeToFile("output_patterns.txt");
+    // Write all entries to output file
+    manager.writeToFile("output/output_patterns.txt");
 
     return 0;
 }

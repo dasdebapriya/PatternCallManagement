@@ -4,54 +4,81 @@
 
 #include <string>
 #include <vector>
-#include <unordered_map>
-#include <unordered_set>
 #include <map>
-#include <fstream>
-#include <iostream>
-#include <sstream>
+#include <set>
+#include "pattern_call.h"
 
-struct PatternCall {
-    int id;
-    std::string name;
-    std::string patternFile;
-    bool called;
 
-    friend std::ostream& operator<<(std::ostream& os, const PatternCall& pc) {
-        os << pc.id << "," << pc.name << "," << pc.patternFile << "," << (pc.called ? "true" : "false");
-        return os;
-    }
-
-    static PatternCall fromString(const std::string& line) {
-        std::stringstream ss(line);
-        std::string item;
-        PatternCall pc;
-        std::getline(ss, item, ','); pc.id = std::stoi(item);
-        std::getline(ss, pc.name, ',');
-        std::getline(ss, pc.patternFile, ',');
-        std::getline(ss, item, ','); pc.called = (item == "true");
-        return pc;
-    }
-};
-
+/**
+ * @brief Manages the pattern call objects.
+ */
 class PatternCallManager {
 public:
+    /**
+     * @brief Read all the PatternCall tuples from an input file.
+     * 
+     * @param filePath The input file path.
+     */
     void loadFromFile(const std::string& filePath);
+
+    /**
+     * @brief Write all the PatternCall objects to an output file.
+     * 
+     * @param filePath The output file path.
+     */
     void writeToFile(const std::string& filePath) const;
+
+    /**
+     * @brief Add a new PatternCall to the manager.
+     * 
+     * @param pc The PatternCall to add.
+     */
     void addPatternCall(const PatternCall& pc);
 
+    /**
+     * @brief Query PatternCall through an ID.
+     * 
+     * @param id The ID for which the PatternCall is queried.
+     * @return The PatternCall corresponding to the id
+     */
     const PatternCall* getById(int id) const;
-    std::vector<PatternCall> getByName(const std::string& name) const;
-    std::vector<PatternCall> getByPath(const std::string& path) const;
-    std::vector<PatternCall> getSkipped() const;
-    std::vector<PatternCall> getCalled() const;
 
+    /**
+     * @brief Query PatternCall through a Name.
+     * 
+     * @param name The name for which the PatternCall objects are queried.
+     * @return The list of PatternCall objects corresponding to the name
+     */
+    std::vector<PatternCall> getByName(const std::string& name) const;
+
+    /**
+     * @brief Query PatternCall through a path.
+     * 
+     * @param path The path for which the PatternCall objects are queried.
+     * @return The list of PatternCall objects corresponding to the path
+     */
+    std::vector<PatternCall> getByPath(const std::string& path) const;
+
+    /**
+     * @brief Query PatternCall through the call status.
+     * 
+     * @return The list of PatternCall objects which are not called 
+     */
+    std::vector<PatternCall> getSkipped() const;
+
+    /**
+     * @brief Query PatternCall through the call status.
+     * 
+     * @return The list of PatternCall objects which are called 
+     */
+    std::vector<PatternCall> getCalled() const;
+    
 private:
-    std::unordered_map<int, PatternCall> byId;
-    std::unordered_multimap<std::string, int> nameIndex;
-    std::unordered_multimap<std::string, int> pathIndex;
-    std::unordered_set<int> skipped;
-    std::unordered_set<int> called;
+    std::map<int, PatternCall> m_byId; 
+    std::multimap<std::string, int> m_nameIndex;
+    std::multimap<std::string, int> m_pathIndex;
+    std::set<int> m_skipped;
+    std::set<int> m_called;
 };
 
 #endif
