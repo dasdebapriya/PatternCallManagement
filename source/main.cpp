@@ -9,41 +9,70 @@ int main() {
     manager.loadFromFile("input/input_patterns.txt");
 
     // Add a few dummy entries
-    manager.addPatternCall(PatternCall(105, "InitSeq", "src/patterns/Init3.pat", true));
-    manager.addPatternCall(PatternCall(202, "WakeupSeq", "src/patterns/Power_1.pat", false));
-    manager.addPatternCall(PatternCall(305, "SleepSeq", "src/patterns/Shutdown_2.pat", true));
+    manager.addPatternCall(std::make_shared<const PatternCall>(105, "InitSeq", "src/patterns/Init3.pat", true));
+    manager.addPatternCall(std::make_shared<const PatternCall>(202, "WakeupSeq", "src/patterns/Power_1.pat", false));
+    manager.addPatternCall(std::make_shared<const PatternCall>(305, "SleepSeq", "src/patterns/Shutdown_2.pat", true));
 
     // Query by ID
-    if (const PatternCall* pc = manager.getById(101)) {
-        std::cout << "Found by ID 101: " << *pc << "\n";
+    int id = 105;
+    if (std::shared_ptr<const PatternCall> scPc = manager.getById(id)) {
+        std::cout << "\nPattern call present with ID " << id << ":" << *scPc << "\n";
+    }
+    else {
+        std::cout << "\nNo pattern call is found with ID : " << id << "\n";
     }
 
     // Query by name
-    std::cout << "\nAll entries with name 'InitSeq':\n";
-    for (const auto& pc : manager.getByName("InitSeq")) {
-        std::cout << pc << "\n";
+    std::string name = "SleepSeq";
+    auto sameNameList = manager.getByName(name);
+    if(sameNameList.size() > 0) {
+        std::cout << "\nAll entries with name : " << name << "\n";
+        for (auto scPc : sameNameList) {
+            std::cout << *scPc << "\n";
+        }
     }
-
+    else {
+        std::cout << "\nNo pattern call is found with name : " << name << "\n";
+    }
+    
     // Query by path
-    std::cout << "\nAll entries with path 'src/patterns/Init_1.pat':\n";
-    for (const auto& pc : manager.getByPath("src/patterns/Init_1.pat")) {
-        std::cout << pc << "\n";
+    std::string path = "src/patterns/Power_1.pat";
+    auto samePathList = manager.getByPath(path);
+    if(sameNameList.size() > 0) {
+        std::cout << "\nAll entries with path : "<< path << "\n";
+        for (auto scPc : manager.getByPath(path)) {
+            std::cout << *scPc << "\n";
+        }
+    }
+    else {
+        std::cout << "\nNo pattern call is found with path : " << path << "\n";
     }
 
     // Get skipped
-    std::cout << "\nAll skipped entries (called == false):\n";
-    for (const auto& pc : manager.getSkipped()) {
-        std::cout << pc << "\n";
+    auto skippedList = manager.getSkipped();
+    if(skippedList.size() > 0) {
+        std::cout << "\nAll skipped entries (called == false):\n";
+        for (auto scPc : skippedList) {
+            std::cout << *scPc << "\n";
+        }
     }
-
+    else {
+        std::cout << "\nNo pattern call is skipped \n";
+    }
+    
     // Get called
-    std::cout << "\nAll called entries (called == true):\n";
-    for (const auto& pc : manager.getCalled()) {
-        std::cout << pc << "\n";
+    auto calledList = manager.getCalled();
+    if(calledList.size() > 0) {
+        std::cout << "\nAll called entries (called == true):\n";
+        for (auto scPc : manager.getCalled()) {
+            std::cout << *scPc << "\n";
+        }
     }
-
+    else {
+        std::cout << "\nAll pattern calls are skipped \n";
+    }
     // Write all entries to output file
-    manager.writeToFile("output/output_patterns.txt");
+    manager.writeToFile("output/output_patterns_1.txt");
 
     return 0;
 }

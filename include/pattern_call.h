@@ -1,4 +1,4 @@
-// pattern_call_manager.h
+// pattern_call.h
 #ifndef PATTERN_CALL_H
 #define PATTERN_CALL_H
 
@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <memory>
 
 /**
  * @brief Represents a pattern call with ID, name, filepath, and call status.
@@ -51,7 +52,7 @@ public :
     friend std::ostream& operator<<(std::ostream& os, const PatternCall& pc);
     
     /// @brief Parses a PatternCall from a delimited string.
-    static PatternCall fromString(const std::string& line); 
+    static std::shared_ptr<const PatternCall> fromString(const std::string& line); 
 };
 
 

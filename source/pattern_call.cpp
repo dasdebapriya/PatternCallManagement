@@ -6,43 +6,51 @@ std::ostream& operator<<(std::ostream& os, const PatternCall& pc) {
         return os;
 }
 
-PatternCall PatternCall::fromString(const std::string& line) {
+std::shared_ptr<const PatternCall> PatternCall::fromString(const std::string& line) {
     std::stringstream ss(line);
+    int id = 0;
+    std::string name;
+    std::string path;
     std::string token;
-    PatternCall pc;
+    bool flag;
 
     // ID
-    if (!std::getline(ss, token, ',')) {   
-        throw std::runtime_error("Missing ID");
+    if (!std::getline(ss, token, ',')) {
+        std::cout << "\nWARNING : Missing ID in the tuple : " << line << "\n";
+        return nullptr;
     }
     else {
-        pc.m_id = std::stoi(token);
+        try {
+            id = std::stoi(token);
+        }
+        catch (const std::invalid_argument& e) {
+            std::cout << "\nWARNING : Non integer ID "<< token << " in the tuple : " << line << "\n";
+            return nullptr;
+        }
     }
     
     // Name
-    if (!std::getline(ss, token, ',')) {
-        throw std::runtime_error("Missing name");
-    }
-    else {
-        pc.m_name = token;
+    if (!std::getline(ss, name, ',')) {
+        std::cout << "\nWARNING : Missing name in the tuple : " << line << "\n";
+        return nullptr;
     }
     
     // Pattern file
-    if (!std::getline(ss, token, ',')) {
-        throw std::runtime_error("Missing pattern file");
-    }
-    else {
-        pc.m_patternFile = token;
+    if (!std::getline(ss, path, ',')) {
+        std::cout << "\nWARNING : Missing path in line : " << line << "\n";
+        return nullptr;
     }
     
     // Called flag
     if (!std::getline(ss, token, ',')) {
-        throw std::runtime_error("Missing called flag");
+        std::cout << "\nWARNING : Missing flag in line : " << line << "\n";
+        return nullptr;
     }
     else {
-        pc.m_called = (token == "true");
+        flag = (token == "true");
     }
-    return pc;
+
+    return std::make_shared<const PatternCall>(id, name, path, flag);
 }
 
 int PatternCall::getId() const{

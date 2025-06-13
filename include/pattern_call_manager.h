@@ -33,7 +33,7 @@ public:
      * 
      * @param pc The PatternCall to add.
      */
-    void addPatternCall(const PatternCall& pc);
+    void addPatternCall(std::shared_ptr<const PatternCall> scPc);
 
     /**
      * @brief Query PatternCall through an ID.
@@ -41,7 +41,7 @@ public:
      * @param id The ID for which the PatternCall is queried.
      * @return The PatternCall corresponding to the id
      */
-    const PatternCall* getById(int id) const;
+    std::shared_ptr<const PatternCall> getById(int id) const;
 
     /**
      * @brief Query PatternCall through a Name.
@@ -49,7 +49,7 @@ public:
      * @param name The name for which the PatternCall objects are queried.
      * @return The list of PatternCall objects corresponding to the name
      */
-    std::vector<PatternCall> getByName(const std::string& name) const;
+    std::vector<std::shared_ptr<const PatternCall>> getByName(const std::string& name) const;
 
     /**
      * @brief Query PatternCall through a path.
@@ -57,24 +57,24 @@ public:
      * @param path The path for which the PatternCall objects are queried.
      * @return The list of PatternCall objects corresponding to the path
      */
-    std::vector<PatternCall> getByPath(const std::string& path) const;
+    std::vector<std::shared_ptr<const PatternCall>> getByPath(const std::string& path) const;
 
     /**
      * @brief Query PatternCall through the call status.
      * 
      * @return The list of PatternCall objects which are not called 
      */
-    std::vector<PatternCall> getSkipped() const;
+    std::vector<std::shared_ptr<const PatternCall>> getSkipped() const;
 
     /**
      * @brief Query PatternCall through the call status.
      * 
      * @return The list of PatternCall objects which are called 
      */
-    std::vector<PatternCall> getCalled() const;
+    std::vector<std::shared_ptr<const PatternCall>> getCalled() const;
     
 private:
-    std::map<int, PatternCall> m_byId; 
+    std::map<int, std::shared_ptr<const PatternCall>> m_byId; 
     std::multimap<std::string, int> m_nameIndex;
     std::multimap<std::string, int> m_pathIndex;
     std::set<int> m_skipped;
