@@ -19,7 +19,7 @@ clean_demo:
 	rm -f demo_app
 
 clean_test:
-	rm -f test_runner
+	rm -f test_runner test/test_patterns_in.txt test/test_patterns_out.txt
 
 clean:
 	rm -f demo_app test_runner
