@@ -3,8 +3,8 @@
 103,InitSeq,src/patterns/Init_1.pat,false
 104,InitSeq,src/patterns/Init_2.pat,true
 108,,,
-,
-109, name,
+ab,
+109, name, path, abc
 201,WakeupSeq,src/patterns/Power_1.pat,true
 301,SleepSeq,src/patterns/Shutdown_1.pat,true
 302,SleepSeq,src/patterns/Shutdown_1.pat,false

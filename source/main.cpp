@@ -16,7 +16,9 @@ int main() {
     // Query by ID
     int id = 105;
     if (std::shared_ptr<const PatternCall> scPc = manager.getById(id)) {
-        std::cout << "\nPattern call present with ID " << id << ":" << *scPc << "\n";
+        if(nullptr != scPc) {
+            std::cout << "\nPattern call present with ID : " << id << "\n" << *scPc << "\n";
+        }
     }
     else {
         std::cout << "\nNo pattern call is found with ID : " << id << "\n";
@@ -28,7 +30,12 @@ int main() {
     if(sameNameList.size() > 0) {
         std::cout << "\nAll entries with name : " << name << "\n";
         for (auto scPc : sameNameList) {
-            std::cout << *scPc << "\n";
+            if(nullptr != scPc) {
+                std::cout << *scPc << "\n";
+            }
+            else {
+                std::cout << "\nNull pointer encountered for pattern call name : " << name << "\n";
+            }
         }
     }
     else {
@@ -41,7 +48,12 @@ int main() {
     if(sameNameList.size() > 0) {
         std::cout << "\nAll entries with path : "<< path << "\n";
         for (auto scPc : manager.getByPath(path)) {
-            std::cout << *scPc << "\n";
+            if(nullptr != scPc) {
+                std::cout << *scPc << "\n";
+            }
+            else {
+                std::cout << "\nNull pointer encountered for pattern call path : " << path << "\n";
+            }
         }
     }
     else {
@@ -53,7 +65,12 @@ int main() {
     if(skippedList.size() > 0) {
         std::cout << "\nAll skipped entries (called == false):\n";
         for (auto scPc : skippedList) {
-            std::cout << *scPc << "\n";
+            if(nullptr != scPc) {
+                std::cout << *scPc << "\n";
+            }
+            else {
+                std::cout << "\nNull pointer encountered for skipped pattern call" << "\n";
+            }
         }
     }
     else {
@@ -65,7 +82,12 @@ int main() {
     if(calledList.size() > 0) {
         std::cout << "\nAll called entries (called == true):\n";
         for (auto scPc : manager.getCalled()) {
-            std::cout << *scPc << "\n";
+            if(nullptr != scPc) {
+                std::cout << *scPc << "\n";
+            }
+            else {
+                std::cout << "\nNull pointer encountered for called pattern call " << "\n";
+            }
         }
     }
     else {

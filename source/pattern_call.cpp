@@ -47,7 +47,16 @@ std::shared_ptr<const PatternCall> PatternCall::fromString(const std::string& li
         return nullptr;
     }
     else {
-        flag = (token == "true");
+        if(token == "true"){
+            flag = true;
+        }
+        else if(token == "false"){
+            flag = false;
+        }
+        else {
+            std::cout << "\nWARNING : Non boolean flag "<< token << " in the tuple : " << line << "\n";
+            return nullptr;
+        }
     }
 
     return std::make_shared<const PatternCall>(id, name, path, flag);
