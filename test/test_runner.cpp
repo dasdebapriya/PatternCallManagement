@@ -18,13 +18,14 @@ int tests_failed = 0;
 
 void test_PatternCall_fromString() {
 
-    PatternCall p = PatternCall::fromString("42,myPattern,src/patterns/Functional.pat,false");
-    ASSERT(p.getId() == 42);
-    ASSERT(p.getName() == "myPattern");
-    ASSERT(p.getPath() == "src/patterns/Functional.pat");
-    ASSERT(p.getFlag() == false);
+    std::shared_ptr<const PatternCall> spPc = PatternCall::fromString("42,myPattern,src/patterns/Functional.pat,false");
+    ASSERT(spPc->getId() == 42);
+    ASSERT(spPc->getName() == "myPattern");
+    ASSERT(spPc->getPath() == "src/patterns/Functional.pat");
+    ASSERT(spPc->getFlag() == false);
     ++tests_passed;
 }
+
 
 void test_PatternCall_operator_output() {
     PatternCall p(1, "name", "path", true);
@@ -48,17 +49,17 @@ void test_PatternCallManager_loadFromFile() {
     mgr.loadFromFile(testFilePath);
 
     // validate loaded pattern
-    auto pattern = mgr.getById(102);
-    ASSERT(pattern != nullptr);
-    ASSERT(pattern->getName() == "Init");
-    ASSERT(pattern->getPath() == "src/patterns/Init_1.pat");
-    ASSERT(pattern->getFlag() == true);
+    auto spPattern = mgr.getById(102);
+    ASSERT(spPattern != nullptr);
+    ASSERT(spPattern->getName() == "Init");
+    ASSERT(spPattern->getPath() == "src/patterns/Init_1.pat");
+    ASSERT(spPattern->getFlag() == true);
 
     auto pattern_list = mgr.getByName("SleepSeq");
     ASSERT(pattern_list.size() == 1);
-    ASSERT(pattern_list[0].getId() == 302);
-    ASSERT(pattern_list[0].getPath() == "src/patterns/Shutdown_1.pat");
-    ASSERT(pattern_list[0].getFlag() == false);
+    ASSERT(pattern_list[0]->getId() == 302);
+    ASSERT(pattern_list[0]->getPath() == "src/patterns/Shutdown_1.pat");
+    ASSERT(pattern_list[0]->getFlag() == false);
     ++tests_passed;
 }
 
@@ -66,8 +67,9 @@ void test_PatternCallManager_writeToFile() {
     
     // create and load pattern
     PatternCallManager mgr;
-    PatternCall p(1, "name", "path", true);
-    mgr.addPatternCall(p);
+    
+    std::shared_ptr<const PatternCall> spPc = std::make_shared<const PatternCall>(1, "name", "path", true);
+    mgr.addPatternCall(spPc);
 
     // write to file
     const std::string testFilePath = "test/test_patterns_out.txt";
@@ -86,83 +88,98 @@ void test_PatternCallManager_writeToFile() {
 
 void test_PatternCallManager_addPatternCall() {
 
+    bool pass = true;
     PatternCallManager mgr;
-    PatternCall p1(0, "name1", "path1", true);
-    mgr.addPatternCall(p1);
-    PatternCall p2(1, "name2", "path2", false);
-    mgr.addPatternCall(p2);
-    PatternCall p3(2, "name1", "path1", false);
-    mgr.addPatternCall(p3);
-    PatternCall p4(3, "name2", "path2", true);
-    mgr.addPatternCall(p4);
+    std::shared_ptr<const PatternCall> spP1 = std::make_shared<const PatternCall>(0, "name1", "path1", true);
+    mgr.addPatternCall(spP1);
+    std::shared_ptr<const PatternCall> spP2 = std::make_shared<const PatternCall>(1, "name2", "path2", false);
+    mgr.addPatternCall(spP2);
+    std::shared_ptr<const PatternCall> spP3 = std::make_shared<const PatternCall>(2, "name1", "path1", false);
+    mgr.addPatternCall(spP3);
+    std::shared_ptr<const PatternCall> spP4 = std::make_shared<const PatternCall>(3, "name2", "path2", true);
+    mgr.addPatternCall(spP4);
 
     for(auto i = 0; i < 4; i++) {
-        auto pattern = mgr.getById(i);
+        auto spPattern = mgr.getById(i);
         switch(i){
             case 0:
-            ASSERT(pattern->getName() == "name1");
-            ASSERT(pattern->getPath() == "path1");
-            ASSERT(pattern->getFlag() == true);
+            ASSERT(spPattern->getName() == "name1");
+            ASSERT(spPattern->getPath() == "path1");
+            ASSERT(spPattern->getFlag() == true);
             break;
 
             case 1:
-            ASSERT(pattern->getName() == "name2");
-            ASSERT(pattern->getPath() == "path2");
-            ASSERT(pattern->getFlag() == false);
+            ASSERT(spPattern->getName() == "name2");
+            ASSERT(spPattern->getPath() == "path2");
+            ASSERT(spPattern->getFlag() == false);
             break;
 
             case 2:
-            ASSERT(pattern->getName() == "name1");
-            ASSERT(pattern->getPath() == "path1");
-            ASSERT(pattern->getFlag() == false);
+            ASSERT(spPattern->getName() == "name1");
+            ASSERT(spPattern->getPath() == "path1");
+            ASSERT(spPattern->getFlag() == false);
             break;
 
             case 3:
-            ASSERT(pattern->getName() == "name2");
-            ASSERT(pattern->getPath() == "path2");
-            ASSERT(pattern->getFlag() == true);
+            ASSERT(spPattern->getName() == "name2");
+            ASSERT(spPattern->getPath() == "path2");
+            ASSERT(spPattern->getFlag() == true);
             break;
 
             default:
+                pass = false;
             break;
         }        
     }
-    ++tests_passed;
+    if(pass) {
+        ++tests_passed;
+    }
 }
+
 
 void test_PatternCallManager_getById(){
     PatternCallManager mgr;
-    PatternCall p1(0, "name1", "path1", true);
-    mgr.addPatternCall(p1);
+    std::shared_ptr<const PatternCall> spP1 = std::make_shared<const PatternCall>(0, "name1", "path1", true);
+    mgr.addPatternCall(spP1);
 
-    auto pattern = mgr.getById(0);
-    ASSERT(pattern->getName() == "name1");
-    ASSERT(pattern->getPath() == "path1");
-    ASSERT(pattern->getFlag() == true);
+    // ID is valid
+    auto spPattern = mgr.getById(0);
+    ASSERT(spPattern->getName() == "name1");
+    ASSERT(spPattern->getPath() == "path1");
+    ASSERT(spPattern->getFlag() == true);
 
+    // ID is invalid
+    spPattern = mgr.getById(1);
+    ASSERT(spPattern == nullptr);
     ++tests_passed;
 }
 
+
 void test_PatternCallManager_getByName(){
     PatternCallManager mgr;
-    PatternCall p1(0, "name1", "path1", true);
-    mgr.addPatternCall(p1);
-    PatternCall p2(1, "name2", "path2", false);
-    mgr.addPatternCall(p2);
-    PatternCall p3(2, "name1", "path1", false);
-    mgr.addPatternCall(p3);
-    PatternCall p4(3, "name2", "path2", true);
-    mgr.addPatternCall(p4);
+    std::shared_ptr<const PatternCall> spP1 = std::make_shared<const PatternCall>(0, "name1", "path1", true);
+    mgr.addPatternCall(spP1);
+    std::shared_ptr<const PatternCall> spP2 = std::make_shared<const PatternCall>(1, "name2", "path2", false);
+    mgr.addPatternCall(spP2);
+    std::shared_ptr<const PatternCall> spP3 = std::make_shared<const PatternCall>(2, "name1", "path1", false);
+    mgr.addPatternCall(spP3);
+    std::shared_ptr<const PatternCall> spP4 = std::make_shared<const PatternCall>(3, "name2", "path2", true);
+    mgr.addPatternCall(spP4);
 
-    auto pattern = mgr.getByName("name1");
-    ASSERT(pattern.size() == 2);
-    ASSERT(pattern[0].getId() == 0);
-    ASSERT(pattern[0].getPath() == "path1");
-    ASSERT(pattern[0].getFlag() == true);
+    // Valid name
+    auto spPattern = mgr.getByName("name1");
+    ASSERT(spPattern.size() == 2);
+    ASSERT(spPattern[0]->getId() == 0);
+    ASSERT(spPattern[0]->getPath() == "path1");
+    ASSERT(spPattern[0]->getFlag() == true);
 
-    ASSERT(pattern[1].getId() == 2);
-    ASSERT(pattern[1].getPath() == "path1");
-    ASSERT(pattern[1].getFlag() == false);
+    ASSERT(spPattern[1]->getId() == 2);
+    ASSERT(spPattern[1]->getPath() == "path1");
+    ASSERT(spPattern[1]->getFlag() == false);
+
+    //Invalid name 
+    spPattern = mgr.getByName("name3");
+    ASSERT(spPattern.size() == 0);
 
     ++tests_passed;
 }
@@ -170,73 +187,76 @@ void test_PatternCallManager_getByName(){
 void test_PatternCallManager_getByPath(){
 
     PatternCallManager mgr;
-    PatternCall p1(0, "name1", "path1", true);
-    mgr.addPatternCall(p1);
-    PatternCall p2(1, "name2", "path2", false);
-    mgr.addPatternCall(p2);
-    PatternCall p3(2, "name1", "path1", false);
-    mgr.addPatternCall(p3);
-    PatternCall p4(3, "name2", "path2", true);
-    mgr.addPatternCall(p4);
+    std::shared_ptr<const PatternCall> spP1 = std::make_shared<const PatternCall>(0, "name1", "path1", true);
+    mgr.addPatternCall(spP1);
+    std::shared_ptr<const PatternCall> spP2 = std::make_shared<const PatternCall>(1, "name2", "path2", false);
+    mgr.addPatternCall(spP2);
+    std::shared_ptr<const PatternCall> spP3 = std::make_shared<const PatternCall>(2, "name1", "path1", false);
+    mgr.addPatternCall(spP3);
+    std::shared_ptr<const PatternCall> spP4 = std::make_shared<const PatternCall>(3, "name2", "path2", true);
+    mgr.addPatternCall(spP4);
 
-    auto pattern = mgr.getByPath("path2");
-    ASSERT(pattern.size() == 2);
-    ASSERT(pattern[0].getId() == 1);
-    ASSERT(pattern[0].getName() == "name2");
-    ASSERT(pattern[0].getFlag() == false);
+    // Valid path
+    auto spPattern = mgr.getByPath("path2");
+    ASSERT(spPattern.size() == 2);
+    ASSERT(spPattern[0]->getId() == 1);
+    ASSERT(spPattern[0]->getName() == "name2");
+    ASSERT(spPattern[0]->getFlag() == false);
 
-    ASSERT(pattern[1].getId() == 3);
-    ASSERT(pattern[1].getName() == "name2");
-    ASSERT(pattern[1].getFlag() == true);
+    ASSERT(spPattern[1]->getId() == 3);
+    ASSERT(spPattern[1]->getName() == "name2");
+    ASSERT(spPattern[1]->getFlag() == true);
 
+    //Invalid path
+    spPattern = mgr.getByPath("path3");
+    ASSERT(spPattern.size() == 0);
     ++tests_passed;
 }
 
-
 void test_PatternCallManager_getSkipped(){
     PatternCallManager mgr;
-    PatternCall p1(0, "name1", "path1", true);
-    mgr.addPatternCall(p1);
-    PatternCall p2(1, "name2", "path2", false);
-    mgr.addPatternCall(p2);
-    PatternCall p3(2, "name1", "path1", false);
-    mgr.addPatternCall(p3);
-    PatternCall p4(3, "name2", "path2", true);
-    mgr.addPatternCall(p4);
+    std::shared_ptr<const PatternCall> spP1 = std::make_shared<const PatternCall>(0, "name1", "path1", true);
+    mgr.addPatternCall(spP1);
+    std::shared_ptr<const PatternCall> spP2 = std::make_shared<const PatternCall>(1, "name2", "path2", false);
+    mgr.addPatternCall(spP2);
+    std::shared_ptr<const PatternCall> spP3 = std::make_shared<const PatternCall>(2, "name1", "path1", false);
+    mgr.addPatternCall(spP3);
+    std::shared_ptr<const PatternCall> spP4 = std::make_shared<const PatternCall>(3, "name2", "path2", true);
+    mgr.addPatternCall(spP4);
 
-    auto pattern = mgr.getSkipped();
-    ASSERT(pattern.size() == 2);
-    ASSERT(pattern[0].getId() == 1);
-    ASSERT(pattern[0].getName() == "name2");
-    ASSERT(pattern[0].getPath() == "path2");
+    auto spPattern = mgr.getSkipped();
+    ASSERT(spPattern.size() == 2);
+    ASSERT(spPattern[0]->getId() == 1);
+    ASSERT(spPattern[0]->getName() == "name2");
+    ASSERT(spPattern[0]->getPath() == "path2");
 
-    ASSERT(pattern[1].getId() == 2);
-    ASSERT(pattern[1].getName() == "name1");
-    ASSERT(pattern[1].getPath() == "path1");
+    ASSERT(spPattern[1]->getId() == 2);
+    ASSERT(spPattern[1]->getName() == "name1");
+    ASSERT(spPattern[1]->getPath() == "path1");
 
     ++tests_passed;
 }
 
 void test_PatternCallManager_getCalled(){
     PatternCallManager mgr;
-    PatternCall p1(0, "name1", "path1", true);
-    mgr.addPatternCall(p1);
-    PatternCall p2(1, "name2", "path2", false);
-    mgr.addPatternCall(p2);
-    PatternCall p3(2, "name1", "path1", false);
-    mgr.addPatternCall(p3);
-    PatternCall p4(3, "name2", "path2", true);
-    mgr.addPatternCall(p4);
+    std::shared_ptr<const PatternCall> spP1 = std::make_shared<const PatternCall>(0, "name1", "path1", true);
+    mgr.addPatternCall(spP1);
+    std::shared_ptr<const PatternCall> spP2 = std::make_shared<const PatternCall>(1, "name2", "path2", false);
+    mgr.addPatternCall(spP2);
+    std::shared_ptr<const PatternCall> spP3 = std::make_shared<const PatternCall>(2, "name1", "path1", false);
+    mgr.addPatternCall(spP3);
+    std::shared_ptr<const PatternCall> spP4 = std::make_shared<const PatternCall>(3, "name2", "path2", true);
+    mgr.addPatternCall(spP4);
 
-    auto pattern = mgr.getCalled();
-    ASSERT(pattern.size() == 2);
-    ASSERT(pattern[0].getId() == 0);
-    ASSERT(pattern[0].getName() == "name1");
-    ASSERT(pattern[0].getPath() == "path1");
+    auto spPattern = mgr.getCalled();
+    ASSERT(spPattern.size() == 2);
+    ASSERT(spPattern[0]->getId() == 0);
+    ASSERT(spPattern[0]->getName() == "name1");
+    ASSERT(spPattern[0]->getPath() == "path1");
 
-    ASSERT(pattern[1].getId() == 3);
-    ASSERT(pattern[1].getName() == "name2");
-    ASSERT(pattern[1].getPath() == "path2");
+    ASSERT(spPattern[1]->getId() == 3);
+    ASSERT(spPattern[1]->getName() == "name2");
+    ASSERT(spPattern[1]->getPath() == "path2");
 
     ++tests_passed;
 }
