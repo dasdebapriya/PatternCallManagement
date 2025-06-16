@@ -14,7 +14,6 @@ This project implements a Pattern Call Management System in modern C++ using `st
 /patternCallManagement/
 ├── doc/                                    # doc files
 │ ├── PatternCall_Design_Document.pdf       # design doc
-│ ├── README.md                             # readme doc
 │
 ├── include/                                 # Header files
 │ ├── pattern_call.h
@@ -36,6 +35,7 @@ This project implements a Pattern Call Management System in modern C++ using `st
 │ ├── test_patterns_out.txt                  # Unit test output file
 │ ├── test_runner.cpp                        # Unit test application
 │
+├── README.md                                # readme doc
 └── Makefile                                 # Build configuration
 
 ## Build Instructions
