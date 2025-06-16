@@ -20,11 +20,6 @@ private :
 
 public : 
 /**
-     * @brief default constructor.
-     */
-    PatternCall() 
-    : m_id(0), m_name(""), m_patternFile(""), m_called(false) {}
-
     /**
      * @brief Constructs a PatternCall object.
      * 
