@@ -1,0 +1,2 @@
+302,SleepSeq,src/patterns/Shutdown_1.pat,false
+102,Init,src/patterns/Init_1.pat,true

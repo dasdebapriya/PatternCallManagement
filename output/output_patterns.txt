@@ -1,0 +1,11 @@
+101,InitSeq,src/patterns/Init_1.pat,true
+102,InitSeq,src/patterns/Init_2.pat,false
+103,InitSeq,src/patterns/Init_1.pat,false
+104,InitSeq,src/patterns/Init_2.pat,true
+105,InitSeq,src/patterns/Init3.pat,true
+201,WakeupSeq,src/patterns/Power_1.pat,true
+202,WakeupSeq,src/patterns/Power_1.pat,false
+301,SleepSeq,src/patterns/Shutdown_1.pat,true
+302,SleepSeq,src/patterns/Shutdown_1.pat,false
+303,SleepSeq,src/patterns/Shutdown_2.pat,false
+305,SleepSeq,src/patterns/Shutdown_2.pat,true

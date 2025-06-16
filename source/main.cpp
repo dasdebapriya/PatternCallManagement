@@ -94,7 +94,7 @@ int main() {
         std::cout << "\nAll pattern calls are skipped \n";
     }
     // Write all entries to output file
-    manager.writeToFile("output/output_patterns_1.txt");
+    manager.writeToFile("output/output_patterns.txt");
 
     return 0;
 }

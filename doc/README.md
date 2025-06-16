@@ -12,40 +12,42 @@ This project implements a Pattern Call Management System in modern C++ using `st
 
 ## Project Structure
 /patternCallManagement/
-├── doc
-│ ├── PatternCall_Design_Document.pdf
-│ ├── README.md
+├── doc/                                    # doc files
+│ ├── PatternCall_Design_Document.pdf       # design doc
+│ ├── README.md                             # readme doc
 │
-├── include
+├── include/                                 # Header files
 │ ├── pattern_call.h
 │ ├── pattern_call_manager.h
 │
-├── input
-│ ├── input_patterns.txt
+├── input/                                   # input files
+│ ├── input_patterns.txt                     # input file with pattern call tuples
 │
-├── output
-│ ├── output_patterns.txt
+├── output/                                  # output files
+│ ├── output_patterns.txt                    # output file with pattern call tuples
 │
-├── src/
-│ ├── main.cpp
-│ ├── pattern_call.cpp
+├── src/                                     # Source files
+│ ├── main.cpp                               # main application
+│ ├── pattern_call.cpp                       
 │ ├── pattern_call_manager.cpp
 │
-├── test/
-│ ├── test_patterns_in.txt
-│ ├── test_patterns_out.txt
-│ ├── test_runner.cpp
+├── test/                                    # Test files
+│ ├── test_patterns_in.txt                   # Unit test input file
+│ ├── test_patterns_out.txt                  # Unit test output file
+│ ├── test_runner.cpp                        # Unit test application
 │
-├──Makefile
-│
-└── Design_Document.docx
+└── Makefile                                 # Build configuration
 
+## Build Instructions
+Prerequisites
+- C++17-compatible compiler (g++, clang++, etc.)
+- Make
 
-## Compile
-make demo_app test_runner
+## Build
+make patternCall_app                          # Build main application
+make test_runner                              # Build test excutable
+make clean                                    # Cleans the built binaries
 
-## Execute solution
-./demo_app
-
-## Execute test
-./test_runner
+## Running the App
+./patternCall_app                             # Run the main app 
+./test_runner                                 # Run the test suite 
