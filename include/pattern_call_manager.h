@@ -36,49 +36,59 @@ public:
     void addPatternCall(std::shared_ptr<const PatternCall> scPc);
 
     /**
-     * @brief Query PatternCall through an ID.
+     * @brief Generic query PatternCall function for ID, Name, Path and Flag.
      * 
-     * @param id The ID for which the PatternCall is queried.
-     * @return The PatternCall corresponding to the id
+     * @param mMap The multimap with the key as ID/Name/Path/Flag which stores the PatternCall objects as values.     
+     * @param key The key (ID, Name, Path and Flag) for which the PatternCall objects are queried.
+     * @return The list of PatternCall pointers corresponding to the key.
      */
-    std::shared_ptr<const PatternCall> getById(int id) const;
+    template <typename T>
+    std::shared_ptr<std::vector<std::shared_ptr<const PatternCall>>> getByKey(const std::multimap<T, std::shared_ptr<const PatternCall>>& mMap, const T& key) const { // total time complexity : O(log n) + k * O(1)
+
+        std::shared_ptr<std::vector<std::shared_ptr<const PatternCall>>> spResults = std::make_shared<std::vector<std::shared_ptr<const PatternCall>>>();
+        auto range = mMap.equal_range(key); // complexity O(log n), n is the number of items in m_nameIndex
+    
+        for (auto it = range.first; it != range.second; ++it) { // k is the number of items in range
+
+            spResults->push_back(it->second); // complexity O(1) for results.push_back
+        }
+        return spResults;
+    }
 
     /**
-     * @brief Query PatternCall through a Name.
+     * @brief get ID multimap
      * 
-     * @param name The name for which the PatternCall objects are queried.
-     * @return The list of PatternCall objects corresponding to the name
+     * @return The ID multimap 
      */
-    std::vector<std::shared_ptr<const PatternCall>> getByName(const std::string& name) const;
+    const std::multimap<int, std::shared_ptr<const PatternCall>>& getIdMmap() const;
+    /**
+     * @brief get name multimap .
+     * 
+     * @return The name multimap 
+     */
+    const std::multimap<std::string, std::shared_ptr<const PatternCall>>& getNameMmap() const;
 
     /**
-     * @brief Query PatternCall through a path.
+     * @brief get path multimap .
      * 
-     * @param path The path for which the PatternCall objects are queried.
-     * @return The list of PatternCall objects corresponding to the path
+     * @return The path multimap 
      */
-    std::vector<std::shared_ptr<const PatternCall>> getByPath(const std::string& path) const;
+    const std::multimap<std::string, std::shared_ptr<const PatternCall>>& getPathMmap() const;
 
     /**
-     * @brief Query PatternCall through the call status.
+     * @brief get flag multimap .
      * 
-     * @return The list of PatternCall objects which are not called 
+     * @return The flag multimap 
      */
-    std::vector<std::shared_ptr<const PatternCall>> getSkipped() const;
+    const std::multimap<bool, std::shared_ptr<const PatternCall>>& getFlagMmap() const;
 
-    /**
-     * @brief Query PatternCall through the call status.
-     * 
-     * @return The list of PatternCall objects which are called 
-     */
-    std::vector<std::shared_ptr<const PatternCall>> getCalled() const;
     
 private:
-    std::map<int, std::shared_ptr<const PatternCall>> m_byId; 
-    std::multimap<std::string, int> m_nameIndex;
-    std::multimap<std::string, int> m_pathIndex;
-    std::set<int> m_skipped;
-    std::set<int> m_called;
+    std::multimap<int, std::shared_ptr<const PatternCall>> m_idIndex;
+    std::multimap<std::string, std::shared_ptr<const PatternCall>> m_nameIndex;
+    std::multimap<std::string, std::shared_ptr<const PatternCall>> m_pathIndex;
+    std::multimap<bool, std::shared_ptr<const PatternCall>> m_flagIndex;
 };
+
 
 #endif

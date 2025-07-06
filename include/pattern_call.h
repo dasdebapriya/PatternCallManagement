@@ -19,7 +19,6 @@ private :
     bool m_called;
 
 public : 
-/**
     /**
      * @brief Constructs a PatternCall object.
      * 
